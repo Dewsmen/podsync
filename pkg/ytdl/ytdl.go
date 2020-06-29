@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	DownloadTimeout = 10 * time.Minute
+	DownloadTimeout = 20 * time.Minute
 	UpdatePeriod    = 24 * time.Hour
 )
 
