@@ -21,7 +21,7 @@ import (
 )
 
 const (
-	DownloadTimeout = 10 * time.Minute
+	DownloadTimeout = 180 * time.Minute
 	UpdatePeriod    = 24 * time.Hour
 )
 
@@ -52,7 +52,7 @@ func New(ctx context.Context, update bool) (*YoutubeDl, error) {
 		return nil, errors.Wrap(err, "could not find youtube-dl")
 	}
 
-	log.Infof("using youtube-dl %s", version)
+	log.Infof("using youtube-dl %s timeout %d", version, DownloadTimeout/time.Minute)
 
 	if err := ytdl.ensureDependencies(ctx); err != nil {
 		return nil, err
@@ -164,7 +164,7 @@ func (dl *YoutubeDl) Download(ctx context.Context, feedConfig *config.Feed, epis
 
 	ext := "mp4"
 	if feedConfig.Format == model.FormatAudio {
-		ext = "mp3"
+		ext = "m4a"
 	}
 	// filePath now with the final extension
 	filePath = filepath.Join(tmpDir, fmt.Sprintf("%s.%s", episode.ID, ext))
@@ -206,12 +206,12 @@ func buildArgs(feedConfig *config.Feed, episode *model.Episode, outputFilePath s
 		args = append(args, "--format", format)
 	} else {
 		// Audio, mp3, high by default
-		format := "bestaudio"
+		format := "bestaudio[ext=m4a]"
 		if feedConfig.Quality == model.QualityLow {
-			format = "worstaudio"
+			format = "worstaudio[ext=m4a]"
 		}
 
-		args = append(args, "--extract-audio", "--audio-format", "mp3", "--format", format)
+		args = append(args, "--extract-audio", "--audio-format", "m4a", "--format", format)
 	}
 
 	args = append(args, "--output", outputFilePath, episode.VideoURL)

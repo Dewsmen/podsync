@@ -133,7 +133,7 @@ func Build(ctx context.Context, feed *model.Feed, cfg *config.Feed, provider url
 func EpisodeName(feedConfig *config.Feed, episode *model.Episode) string {
 	ext := "mp4"
 	if feedConfig.Format == model.FormatAudio {
-		ext = "mp3"
+		ext = "m4a"
 	}
 
 	return fmt.Sprintf("%s.%s", episode.ID, ext)
